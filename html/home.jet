@@ -95,7 +95,7 @@
                 console.log("action is ", data.action)
                 console.log(data)
                 switch (data.action) {
-                    case "connected":
+                    case "wellcome":
                         o.innerHTML = data.message
                 }
             }
