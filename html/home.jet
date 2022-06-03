@@ -76,3 +76,39 @@
 
     <script src="https://unpkg.com/notie"></script>
     <script src="/static/reconnecting-websocket.min.js"></script>
+    <script>
+        let socket = null;
+        let o = document.getElementById("output");
+        let userNameElm = document.getElementById("username");
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws", null, { debug: true, reconnectInterval: 3000 });
+            let userName = localStorage.getItem("name");
+            if (userName) {
+                userNameElm.value = userName;
+            }
+        });
+
+        userNameElm.addEventListener("change", function () {
+            let jsonData = {};
+            jsonData["action"] = "username";
+            jsonData["username"] = this.value;
+            localStorage.setItem("name", userNameElm.value);
+            socket.send(JSON.stringify(jsonData));
+        })
+
+        function sendMessage() {
+            let jsonData = {};
+            jsonData["action"] = "broadcast";
+            let msg = document.getElementById("message");
+            if ((msg.value !== "") && (userNameElm.value !== "")) {
+                jsonData["username"] = userNameElm.value;
+                jsonData["message"] = document.getElementById("message").value;
+                socket.send(JSON.stringify(jsonData));
+                msg.value = "";
+            } else {
+                notify("You must specify a username & message!", "error");
+            }
+        }
+    </script>
