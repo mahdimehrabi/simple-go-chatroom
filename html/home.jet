@@ -84,11 +84,14 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws", null, { debug: true, reconnectInterval: 3000 });
-            let userName = localStorage.getItem("name");
-            if (userName) {
-                userNameElm.value = userName;
-            }
+            socket.onopen = event => {
+                let userName = localStorage.getItem("name");
+                if (userName) {
+                    userNameElm.value = userName;
+                    sendUsername()
+                }
 
+            }
 
             socket.onmessage = msg => {
                 const data = JSON.parse(msg.data);
@@ -97,18 +100,24 @@
                 switch (data.action) {
                     case "wellcome":
                         o.innerHTML = data.message
+                        break
+                    case "username":
+                        o.innerHTML += `<br><em><small>${data.username} connected to chat!</small></em>`
                 }
             }
         });
 
         userNameElm.addEventListener("change", function () {
-            let jsonData = {};
-            jsonData["action"] = "username";
-            jsonData["username"] = this.value;
             localStorage.setItem("name", userNameElm.value);
-            socket.send(JSON.stringify(jsonData));
+            sendUsername()
         })
 
+        function sendUsername() {
+            let jsonData = {};
+            jsonData["action"] = "username";
+            jsonData["username"] = userNameElm.value;
+            socket.send(JSON.stringify(jsonData));
+        }
 
         function sendMessage() {
             let jsonData = {};

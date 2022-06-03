@@ -63,20 +63,24 @@ func ListenToWsChannel() {
 	for {
 		e := <-wsChan
 		switch e.Action {
-		case "connected":
+		case "username":
 			if e.Username != "" {
-				response.Action = "connected"
+				response.Action = "username"
 				response.Username = e.Username
 				response.MessageType = mtInfo
 				response.Message = e.Username + " Connected!"
+				BroadCastToAll(response, *e.Conn)
 			}
 
 		}
 	}
 }
 
-func BroadCastToAll(response WsResponse) {
+func BroadCastToAll(response WsResponse, conn WsConn) {
 	for client := range clients {
+		if client == conn {
+			continue
+		}
 		err := client.WriteJSON(response)
 		if err != nil {
 			log.Printf("Websocket error on %s: %s", response.Action, err)
