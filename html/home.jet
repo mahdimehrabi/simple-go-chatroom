@@ -88,6 +88,17 @@
             if (userName) {
                 userNameElm.value = userName;
             }
+
+
+            socket.onmessage = msg => {
+                const data = JSON.parse(msg.data);
+                console.log("action is ", data.action)
+                console.log(data)
+                switch (data.action) {
+                    case "connected":
+                        o.innerHTML = data.message
+                }
+            }
         });
 
         userNameElm.addEventListener("change", function () {
@@ -97,6 +108,7 @@
             localStorage.setItem("name", userNameElm.value);
             socket.send(JSON.stringify(jsonData));
         })
+
 
         function sendMessage() {
             let jsonData = {};
