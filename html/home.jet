@@ -104,11 +104,10 @@
                         break;
                     case "username":
                         o.innerHTML += `<br><em><small>${data.username} connected to chat!</small></em>`
-                        let users = [];
+                        let users = "";
                         for (let i = 0; i < data.connectedUsers.length; i++) {
-                            users+=users.concat(`<li>${data.connectedUsers[i]}</li>`);
+                            users += `<li>${data.connectedUsers[i]}</li>`;
                         }
-                        console.log(users);
                         usersElm.innerHTML = users;
                         break;
                 }
