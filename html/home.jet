@@ -103,7 +103,7 @@
                         o.innerHTML = data.message
                         break;
                     case "username":
-                        o.innerHTML += `<br><em><small>${data.username} connected to chat!</small></em>`
+                        o.innerHTML += `<br><em><small>${data.message}</small></em>`
                         showUserList(data)
                         break;
                     case "connectedUsers":

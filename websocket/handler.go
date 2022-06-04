@@ -68,7 +68,12 @@ func ListenToWsChannel() {
 				response.Action = "username"
 				response.Username = e.Username
 				response.MessageType = mtInfo
-				response.Message = e.Username + " Connected!"
+				if clients[*e.Conn] == "" {
+					response.Message = e.Username + " Connected!"
+				} else {
+					fmt.Println(clients[*e.Conn])
+					response.Message = clients[*e.Conn] + " changed its name to " + e.Username
+				}
 				clients[*e.Conn] = e.Username
 				response.ConnectedUsers = getConnectedUsers()
 				broadCastToAll(response, *e.Conn)
@@ -77,7 +82,6 @@ func ListenToWsChannel() {
 				response.Message = ""
 				e.Conn.WriteJSON(response)
 			}
-
 		}
 	}
 }
