@@ -69,14 +69,16 @@ func ListenToWsChannel() {
 				response.Username = e.Username
 				response.MessageType = mtInfo
 				response.Message = e.Username + " Connected!"
-				BroadCastToAll(response, *e.Conn)
+				clients[*e.Conn] = e.Username
+				response.ConnectedUsers = getConnectedUsers()
+				broadCastToAll(response, *e.Conn)
 			}
 
 		}
 	}
 }
 
-func BroadCastToAll(response WsResponse, conn WsConn) {
+func broadCastToAll(response WsResponse, conn WsConn) {
 	for client := range clients {
 		if client == conn {
 			continue
@@ -88,4 +90,12 @@ func BroadCastToAll(response WsResponse, conn WsConn) {
 			delete(clients, client)
 		}
 	}
+}
+
+func getConnectedUsers() []string {
+	users := make([]string, len(clients))
+	for _, v := range clients {
+		users = append(users, v)
+	}
+	return users
 }

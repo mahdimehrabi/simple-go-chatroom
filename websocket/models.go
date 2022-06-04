@@ -18,7 +18,7 @@ type WsResponse struct {
 	Message        interface{} `json:"message"`
 	MessageType    messageType `json:"messageType"`
 	Conn           *WsConn     `json:"-"`
-	ConnectedUsers []string    `json:"connected_users"`
+	ConnectedUsers []string    `json:"connectedUsers"`
 }
 
 type Payload struct {

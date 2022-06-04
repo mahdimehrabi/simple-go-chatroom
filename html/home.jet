@@ -80,6 +80,7 @@
         let socket = null;
         let o = document.getElementById("output");
         let userNameElm = document.getElementById("username");
+        let usersElm = document.getElementById("online_users")
 
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -100,9 +101,16 @@
                 switch (data.action) {
                     case "wellcome":
                         o.innerHTML = data.message
-                        break
+                        break;
                     case "username":
                         o.innerHTML += `<br><em><small>${data.username} connected to chat!</small></em>`
+                        let users = [];
+                        for (let i = 0; i < data.connectedUsers.length; i++) {
+                            users+=users.concat(`<li>${data.connectedUsers[i]}</li>`);
+                        }
+                        console.log(users);
+                        usersElm.innerHTML = users;
+                        break;
                 }
             }
         });
