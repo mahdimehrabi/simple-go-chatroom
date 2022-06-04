@@ -104,11 +104,10 @@
                         break;
                     case "username":
                         o.innerHTML += `<br><em><small>${data.username} connected to chat!</small></em>`
-                        let users = "";
-                        for (let i = 0; i < data.connectedUsers.length; i++) {
-                            users += `<li>${data.connectedUsers[i]}</li>`;
-                        }
-                        usersElm.innerHTML = users;
+                        showUserList(data)
+                        break;
+                    case "connectedUsers":
+                        showUserList(data)
                         break;
                 }
             }
@@ -118,6 +117,15 @@
             localStorage.setItem("name", userNameElm.value);
             sendUsername()
         })
+
+
+        function showUserList(data) {
+            let users = "";
+            for (let i = 0; i < data.connectedUsers.length; i++) {
+                users += `<li>${data.connectedUsers[i]}</li>`;
+            }
+            usersElm.innerHTML = users;
+        }
 
         function sendUsername() {
             let jsonData = {};

@@ -72,6 +72,10 @@ func ListenToWsChannel() {
 				clients[*e.Conn] = e.Username
 				response.ConnectedUsers = getConnectedUsers()
 				broadCastToAll(response, *e.Conn)
+
+				response.Action = "connectedUsers"
+				response.Message = ""
+				e.Conn.WriteJSON(response)
 			}
 
 		}
@@ -93,9 +97,11 @@ func broadCastToAll(response WsResponse, conn WsConn) {
 }
 
 func getConnectedUsers() []string {
-	users := make([]string, len(clients))
+	users := make([]string, 0)
 	for _, v := range clients {
-		users = append(users, v)
+		if v != "" {
+			users = append(users, v)
+		}
 	}
 	return users
 }
