@@ -80,7 +80,7 @@ func ListenToWsChannel() {
 					response.Message = clients[*e.Conn] + " changed its name to " + e.Username
 				}
 				clients[*e.Conn] = e.Username
-				response.ConnectedUsers = getConnectedUsers()
+				response.ConnectedUsers = getConnectedUsers(clients)
 				broadCastAllExcept(response, *e.Conn)
 
 				response.Action = "connectedUsers"
@@ -100,8 +100,10 @@ func broadCastAllExcept(response WsResponse, excpetConn WsConn) {
 		err := client.WriteJSON(response)
 		if err != nil {
 			log.Printf("Websocket error on %s: %s", response.Action, err)
-			_ = client.Close()
-			delete(clients, client)
+			LeftRoom(&client)
+			if response.Action == "connectedUsers" {
+				return
+			}
 		}
 	}
 }
@@ -112,14 +114,28 @@ func broadCastAll(response WsResponse) {
 		err := client.WriteJSON(response)
 		if err != nil {
 			log.Printf("Websocket error on %s: %s", response.Action, err)
-			_ = client.Close()
-			delete(clients, client)
+			LeftRoom(&client)
 		}
 	}
 }
 
+func LeftRoom(client *WsConn) {
+	_ = client.Close()
+	message := clients[*client] + " left the room!"
+	delete(clients, *client)
+	connectedResponse := WsResponse{
+		Action:         "left",
+		Username:       "mahd",
+		Message:        message,
+		MessageType:    "info",
+		ConnectedUsers: getConnectedUsers(clients),
+	}
+
+	broadCastAll(connectedResponse)
+}
+
 //collect connected user names as string array
-func getConnectedUsers() []string {
+func getConnectedUsers(clients map[WsConn]string) []string {
 	users := make([]string, 0)
 	for _, v := range clients {
 		if v != "" {

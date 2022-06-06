@@ -109,6 +109,11 @@
                     case "connectedUsers":
                         showUserList(data)
                         break;
+                    case "left":
+                        o.innerHTML += `<br><em><small>${data.message}</small></em>`
+                        showUserList(data)
+                        sendUsername()
+                        break;
                 }
             }
         });
