@@ -87,6 +87,8 @@ func ListenToWsChannel() {
 				response.Message = ""
 				e.Conn.WriteJSON(response)
 			}
+		case "message":
+
 		}
 	}
 }
