@@ -27,6 +27,6 @@ type Payload struct {
 	Action      string      `json:"action"`
 	Username    string      `json:"username"`
 	Message     interface{} `json:"message"`
-	MessageType messageType `json:"message"`
+	MessageType messageType `json:"messageType"`
 	Conn        *WsConn     `json:"-"`
 }

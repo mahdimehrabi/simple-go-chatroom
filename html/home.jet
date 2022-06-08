@@ -81,6 +81,7 @@
         let o = document.getElementById("output");
         let userNameElm = document.getElementById("username");
         let usersElm = document.getElementById("online_users")
+        let messageElm=document.getElementById("message")
 
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -114,6 +115,9 @@
                         showUserList(data)
                         sendUsername()
                         break;
+                    case "message":
+                        o.innerHTML+=`<br><strong>${data.username}:</strong>${data.message}`;
+                        break;
                 }
             }
         });
@@ -122,6 +126,14 @@
             localStorage.setItem("name", userNameElm.value);
             sendUsername()
         })
+
+        messageElm.addEventListener("keydown", function (e) {
+            console.log(e.key)
+            if (e.key=="Enter"){
+                sendMessage()
+            }
+        });
+
 
 
         function showUserList(data) {
@@ -141,7 +153,7 @@
 
         function sendMessage() {
             let jsonData = {};
-            jsonData["action"] = "broadcast";
+            jsonData["action"] = "message";
             let msg = document.getElementById("message");
             if ((msg.value !== "") && (userNameElm.value !== "")) {
                 jsonData["username"] = userNameElm.value;

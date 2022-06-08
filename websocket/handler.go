@@ -85,10 +85,16 @@ func ListenToWsChannel() {
 
 				response.Action = "connectedUsers"
 				response.Message = ""
-				e.Conn.WriteJSON(response)
+				err := e.Conn.WriteJSON(response)
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 		case "message":
-
+			response.Action = "message"
+			response.Message = e.Message.(string)
+			response.MessageType = "message"
+			broadCastAll(response)
 		}
 	}
 }
