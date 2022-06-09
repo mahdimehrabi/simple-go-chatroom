@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"chat/utils"
 	"fmt"
 	"log"
 	"net/http"
@@ -94,6 +95,12 @@ func ListenToWsChannel() {
 			response.Action = "message"
 			response.Message = e.Message.(string)
 			response.MessageType = "message"
+			broadCastAll(response)
+		case "attachment":
+			response.Action = "attachment"
+			response.Message = "attchment test"
+			response.MessageType = "file"
+			utils.SaveFile()
 			broadCastAll(response)
 		}
 	}
