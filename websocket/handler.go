@@ -9,7 +9,7 @@ import (
 )
 
 var clients = make(map[WsConn]string)
-var wsChan = make(chan Payload)
+var wsChan = make(chan any)
 
 //connection upgrader
 var upgradeConnection = websocket.Upgrader{
@@ -50,7 +50,7 @@ func ListenForWs(conn *WsConn) {
 		}
 	}()
 	for {
-		var payload Payload
+		var payload PayloadMessage
 		err := conn.ReadJSON(&payload)
 		if err != nil {
 
@@ -66,7 +66,7 @@ func ListenForWs(conn *WsConn) {
 func ListenToWsChannel() {
 	var response WsResponse
 	for {
-		e := <-wsChan
+		e := (<-wsChan).(PayloadMessage)
 		switch e.Action {
 		case "username":
 			if e.Username != "" {
