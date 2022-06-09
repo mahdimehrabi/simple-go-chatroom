@@ -1,7 +1,6 @@
 package websocket
 
 import (
-	"chat/utils"
 	"fmt"
 	"log"
 	"net/http"
@@ -73,7 +72,6 @@ func ListenToWsChannel() {
 			if e.Username != "" {
 				response.Action = "username"
 				response.Username = e.Username
-				response.MessageType = mtInfo
 				if clients[*e.Conn] == "" {
 					response.Message = e.Username + " Connected!"
 				} else {
@@ -94,13 +92,11 @@ func ListenToWsChannel() {
 		case "message":
 			response.Action = "message"
 			response.Message = e.Message.(string)
-			response.MessageType = "message"
 			broadCastAll(response)
 		case "attachment":
 			response.Action = "attachment"
 			response.Message = "attchment test"
-			response.MessageType = "file"
-			utils.SaveFile()
+			//utils.SaveFile()
 			broadCastAll(response)
 		}
 	}
@@ -142,7 +138,6 @@ func LeftRoom(client *WsConn) {
 		Action:         "left",
 		Username:       "mahd",
 		Message:        message,
-		MessageType:    "info",
 		ConnectedUsers: getConnectedUsers(clients),
 	}
 
