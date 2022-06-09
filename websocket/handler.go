@@ -50,12 +50,11 @@ func ListenForWs(conn *WsConn) {
 		}
 	}()
 	for {
-		var payload PayloadMessage
-		err := conn.ReadJSON(&payload)
+		action, model, err := conn.ReadJSON()
 		if err != nil {
 
 		} else {
-			payload.Conn = conn
+			model.Conn = conn
 			wsChan <- payload
 		}
 	}
